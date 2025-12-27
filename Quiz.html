@@ -36,9 +36,45 @@
             padding-bottom: 15px;
         }
 
-        /* تنسيق زر الترتيب */
-        .shuffle-btn {
-            background-color: #f0f2f5;
+        /* حاوية أدوات التحكم */
+        .controls-container {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #e9ecef;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .control-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .control-label {
+            font-weight: bold;
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        .num-input {
+            padding: 8px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            width: 60px;
+            text-align: center;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1em;
+        }
+
+        /* تنسيق الأزرار العلوية */
+        .top-btn {
+            background-color: white;
             color: #555;
             border: 1px solid #ddd;
             padding: 8px 15px;
@@ -46,21 +82,35 @@
             cursor: pointer;
             font-family: 'Tajawal', sans-serif;
             font-size: 0.9em;
-            margin-bottom: 20px;
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
             gap: 5px;
         }
 
-        .shuffle-btn:hover {
+        .top-btn:hover {
             background-color: #e2e6ea;
+            transform: translateY(-2px);
         }
 
-        .shuffle-btn.active {
+        /* زر البدء */
+        .start-btn {
             background-color: #667eea;
             color: white;
-            border-color: #667eea;
+            border: none;
+            font-weight: bold;
+        }
+
+        .start-btn:hover {
+            background-color: #5a6fd6;
+            color: white;
+        }
+
+        /* زر الترتيب النشط */
+        .shuffle-btn.active {
+            background-color: #764ba2;
+            color: white;
+            border-color: #764ba2;
         }
 
         .question-number {
@@ -251,10 +301,21 @@
 <body>
 
     <div class="quiz-card">
-        <!-- زر التبديل بين العشوائي والمرتب -->
-        <button id="shuffle-btn" class="shuffle-btn" onclick="toggleShuffle()">
-            <span>🔢</span> ترتيب الأسئلة: مرتب
-        </button>
+        
+        <!-- لوحة التحكم في الأسئلة -->
+        <div class="controls-container">
+            <div class="control-row">
+                <button id="shuffle-btn" class="top-btn shuffle-btn" onclick="toggleShuffle()">
+                    <span>🔢</span> الترتيب: عادي
+                </button>
+            </div>
+            <div class="control-row">
+                <span class="control-label">عدد الأسئلة:</span>
+                <input type="number" id="q-limit" class="num-input" min="1" value="10">
+                <span style="font-size: 0.8em; color: #777;">(الكل: <span id="total-available">0</span>)</span>
+                <button onclick="applySettings()" class="top-btn start-btn">بدء الاختبار</button>
+            </div>
+        </div>
 
         <div class="progress-bar">
             <div class="progress-fill" id="progress-fill"></div>
@@ -592,6 +653,11 @@
             q.id = index + 1;
         });
 
+        // تحديث الحد الأقصى للإدخال
+        document.getElementById('q-limit').max = originalQuestions.length;
+        document.getElementById('q-limit').value = originalQuestions.length;
+        document.getElementById('total-available').innerText = originalQuestions.length;
+
         // مصفوفة الأسئلة الحالية (قابلة للتغيير)
         let questions = [...originalQuestions];
         let currentQuestion = 0;
@@ -599,43 +665,66 @@
         let isRandom = false; // حالة الترتيب
         let wrongAnswers = []; // لتخزين الإجابات الخاطئة
 
-        // تحديث العدد الكلي للأسئلة
-        document.getElementById('q-total').innerText = questions.length;
-
         // دالة تبديل الترتيب
         function toggleShuffle() {
             isRandom = !isRandom;
             const btn = document.getElementById('shuffle-btn');
             
             if (isRandom) {
-                // خلط الأسئلة
-                for (let i = questions.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [questions[i], questions[j]] = [questions[j], questions[i]];
-                }
-                btn.innerHTML = "<span>🔀</span> ترتيب الأسئلة: عشوائي";
+                btn.innerHTML = "<span>🔀</span> الترتيب: عشوائي";
                 btn.classList.add('active');
             } else {
-                // إعادة الترتيب الأصلي
-                questions = [...originalQuestions];
-                btn.innerHTML = "<span>🔢</span> ترتيب الأسئلة: مرتب";
+                btn.innerHTML = "<span>🔢</span> الترتيب: عادي";
                 btn.classList.remove('active');
             }
+            
+            // عند تغيير الترتيب، نعيد تطبيق الإعدادات
+            applySettings();
+        }
 
-            // إعادة ضبط الاختبار
+        // دالة تطبيق الإعدادات (العدد + الترتيب)
+        function applySettings() {
+            const limitInput = document.getElementById('q-limit');
+            let limit = parseInt(limitInput.value);
+            
+            // التحقق من صحة الرقم
+            if (isNaN(limit) || limit < 1) limit = 1;
+            if (limit > originalQuestions.length) limit = originalQuestions.length;
+            limitInput.value = limit;
+
+            // إنشاء نسخة من الأسئلة
+            let tempQuestions = [...originalQuestions];
+
+            if (isRandom) {
+                // خلط الأسئلة
+                for (let i = tempQuestions.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [tempQuestions[i], tempQuestions[j]] = [tempQuestions[j], tempQuestions[i]];
+                }
+            }
+
+            // أخذ العدد المطلوب فقط
+            questions = tempQuestions.slice(0, limit);
+            
+            // تحديث العدد الكلي في الواجهة
+            document.getElementById('q-total').innerText = questions.length;
+
+            // إعادة تشغيل الاختبار
             restartQuiz();
         }
 
-        // دالة إعادة تشغيل الاختبار عند تغيير الترتيب
+        // دالة إعادة تشغيل الاختبار
         function restartQuiz() {
             currentQuestion = 0;
             score = 0;
-            wrongAnswers = []; // تصفير الأخطاء عند إعادة الاختبار
+            wrongAnswers = []; // تصفير الأخطاء
+            
             document.getElementById('quiz-container').innerHTML = `
                 <div class="question" id="question-text">جاري تحميل الأسئلة...</div>
                 <div class="options" id="options-container"></div>
                 <div class="score-area" id="score-text">النتيجة: 0</div>
             `;
+            
             loadQuestion();
         }
 
@@ -737,8 +826,9 @@
             document.getElementById('quiz-container').innerHTML = mistakesHTML;
         }
 
-        loadQuestion();
+        // بدء التطبيق
+        applySettings();
     </script>
 
 </body>
-</html>
+
