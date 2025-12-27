@@ -36,7 +36,7 @@
             padding-bottom: 15px;
         }
 
-        /* تنسيق زر الترتيب العشوائي */
+        /* تنسيق زر الترتيب */
         .shuffle-btn {
             background-color: #f0f2f5;
             color: #555;
@@ -587,7 +587,12 @@
             }
         ];
 
-        // مصفوفة الأسئلة الحالية
+        // تعيين الأرقام التعريفية للأسئلة
+        originalQuestions.forEach((q, index) => {
+            q.id = index + 1;
+        });
+
+        // مصفوفة الأسئلة الحالية (قابلة للتغيير)
         let questions = [...originalQuestions];
         let currentQuestion = 0;
         let score = 0;
@@ -617,9 +622,11 @@
                 btn.classList.remove('active');
             }
 
+            // إعادة ضبط الاختبار
             restartQuiz();
         }
 
+        // دالة إعادة تشغيل الاختبار عند تغيير الترتيب
         function restartQuiz() {
             currentQuestion = 0;
             score = 0;
@@ -634,8 +641,8 @@
 
         function loadQuestion() {
             const q = questions[currentQuestion];
-            // إضافة رقم السؤال بجانب النص
-            document.getElementById('question-text').innerText = (currentQuestion + 1) + ". " + q.t;
+            // عرض رقم السؤال المرتبط بالسؤال (q.id)
+            document.getElementById('question-text').innerText = q.id + ". " + q.t;
             document.getElementById('q-curr').innerText = currentQuestion + 1;
             
             const progress = ((currentQuestion) / questions.length) * 100;
@@ -675,7 +682,7 @@
                     q: questions[currentQuestion].t,
                     selected: questions[currentQuestion].o[selectedIndex],
                     correct: questions[currentQuestion].o[correctIndex],
-                    qNum: currentQuestion + 1
+                    qNum: questions[currentQuestion].id // استخدام الرقم الأصلي
                 });
             }
 
@@ -735,4 +742,3 @@
 
 </body>
 </html>
-
