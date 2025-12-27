@@ -31,12 +31,12 @@
 
         h2 {
             color: #4a4a4a;
-            margin-bottom: 15px; /* تم تقليل المسافة قليلاً */
+            margin-bottom: 15px;
             border-bottom: 2px solid #eee;
             padding-bottom: 15px;
         }
 
-        /* تنسيق زر الترتيب العشوائي */
+        /* تنسيق زر الترتيب */
         .shuffle-btn {
             background-color: #f0f2f5;
             color: #555;
@@ -83,6 +83,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            text-align: center;
         }
 
         .tf-buttons {
@@ -115,16 +116,22 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
+        .btn-true {
+            color: #155724;
+        }
+        
         .btn-true:hover:not(:disabled) {
             background-color: #d4edda;
             border-color: #28a745;
-            color: #155724;
+        }
+
+        .btn-false {
+            color: #721c24;
         }
 
         .btn-false:hover:not(:disabled) {
             background-color: #f8d7da;
             border-color: #dc3545;
-            color: #721c24;
         }
 
         .tf-btn.correct-answer {
@@ -172,6 +179,44 @@
             color: #764ba2;
         }
 
+        /* تنسيق قائمة الأخطاء */
+        .mistakes-container {
+            text-align: right;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            border: 1px solid #eee;
+        }
+
+        .mistake-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-right: 4px solid #dc3545;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .mistake-q {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .mistake-wrong {
+            color: #dc3545;
+            font-size: 0.95em;
+        }
+
+        .mistake-correct {
+            color: #28a745;
+            font-size: 0.95em;
+            font-weight: bold;
+        }
+
         .progress-bar {
             height: 6px;
             background: #eee;
@@ -186,6 +231,7 @@
             transition: width 0.3s ease;
         }
 
+        /* واتساب */
         .whatsapp-container {
             position: fixed;
             bottom: 20px;
@@ -249,9 +295,11 @@
             <div class="question" id="question-text">جاري تحميل الأسئلة...</div>
             
             <div class="tf-buttons">
+                <!-- 0 تعني صواب حسب الكود -->
                 <button class="tf-btn btn-true" id="btn-0" onclick="checkAnswer(0)">
                     ✅ صواب
                 </button>
+                <!-- 1 تعني خطأ حسب الكود -->
                 <button class="tf-btn btn-false" id="btn-1" onclick="checkAnswer(1)">
                     ❌ خطأ
                 </button>
@@ -263,7 +311,7 @@
         <a href="index.html" class="back-btn">← العودة للقائمة الرئيسية</a>
     </div>
 
-    <!-- واتساب -->
+    <!-- مجموعة واتساب -->
     <div class="whatsapp-container">
         <a href="https://wa.me/201286094595" class="whatsapp-float" target="_blank" title="تواصل معنا عبر واتساب">
             <svg style="width: 35px; height: 35px; fill: white;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -328,11 +376,12 @@
             { "t": "من التقسيمات السياسية للنفقات العامة النفقات المحايدة والنفقات التدخلية", "a": 0 }
         ];
 
-        // مصفوفة الأسئلة الحالية (قابلة للتغيير)
+        // مصفوفة الأسئلة الحالية
         let questions = [...originalQuestions];
         let currentQuestion = 0;
         let score = 0;
         let isRandom = false; // حالة الترتيب
+        let wrongAnswers = []; // لتخزين الإجابات الخاطئة
 
         // تحديث العدد الكلي
         document.getElementById('total-q').innerText = questions.length;
@@ -365,14 +414,21 @@
         function restartQuiz() {
             currentQuestion = 0;
             score = 0;
+            wrongAnswers = []; // تصفير الأخطاء
             
-            // إعادة بناء واجهة الأسئلة إذا كانت قد اختفت (في شاشة النتيجة)
+            // إعادة بناء واجهة الأسئلة
             document.getElementById('quiz-container').innerHTML = `
                 <div class="question" id="question-text">جاري تحميل الأسئلة...</div>
+                
                 <div class="tf-buttons">
-                    <button class="tf-btn btn-true" id="btn-0" onclick="checkAnswer(0)">✅ صواب</button>
-                    <button class="tf-btn btn-false" id="btn-1" onclick="checkAnswer(1)">❌ خطأ</button>
+                    <button class="tf-btn btn-true" id="btn-0" onclick="checkAnswer(0)">
+                        ✅ صواب
+                    </button>
+                    <button class="tf-btn btn-false" id="btn-1" onclick="checkAnswer(1)">
+                        ❌ خطأ
+                    </button>
                 </div>
+
                 <div class="score-area" id="score-text">النتيجة: 0</div>
             `;
             
@@ -381,7 +437,8 @@
 
         function loadQuestion() {
             const q = questions[currentQuestion];
-            document.getElementById('question-text').innerText = q.t;
+            // إضافة الترقيم للسؤال
+            document.getElementById('question-text').innerText = (currentQuestion + 1) + ". " + q.t;
             document.getElementById('q-curr').innerText = currentQuestion + 1;
             
             const progress = ((currentQuestion) / questions.length) * 100;
@@ -395,6 +452,7 @@
         }
 
         function checkAnswer(userChoice) {
+            // تعطيل الأزرار
             const btns = document.querySelectorAll('.tf-btn');
             btns.forEach(btn => btn.disabled = true);
 
@@ -408,23 +466,65 @@
             } else {
                 selectedBtn.classList.add('wrong-answer');
                 correctBtn.classList.add('show-correct');
+                
+                // تسجيل الإجابة الخاطئة (0=صواب, 1=خطأ)
+                wrongAnswers.push({
+                    q: questions[currentQuestion].t,
+                    selected: userChoice === 0 ? "صواب" : "خطأ",
+                    correct: correctChoice === 0 ? "صواب" : "خطأ",
+                    qNum: currentQuestion + 1
+                });
             }
 
             document.getElementById('score-text').innerText = `النتيجة: ${score} من ${questions.length}`;
 
+            // الانتقال التلقائي
             setTimeout(() => {
                 currentQuestion++;
                 if (currentQuestion < questions.length) {
                     loadQuestion();
                 } else {
-                    document.getElementById('progress-fill').style.width = '100%';
-                    document.getElementById('quiz-container').innerHTML = `
-                        <h3>🎉 انتهى الامتحان!</h3>
-                        <p style="font-size:1.5em; margin: 20px 0;">نتيجتك النهائية: <br> <strong>${score}</strong> من <strong>${questions.length}</strong></p>
-                        <button class="tf-btn" onclick="restartQuiz()" style="background:#764ba2; color:white; border:none; width:auto; padding: 15px 30px;">إعادة الاختبار</button>
-                    `;
+                    showFinalResult();
                 }
             }, 1200);
+        }
+
+        function showFinalResult() {
+            document.getElementById('progress-fill').style.width = '100%';
+            
+            let resultHTML = `
+                <h3>🎉 انتهى الامتحان!</h3>
+                <p style="font-size:1.5em; margin: 20px 0;">نتيجتك النهائية: <br> <strong>${score}</strong> من <strong>${questions.length}</strong></p>
+                <button class="tf-btn" onclick="restartQuiz()" style="background:#764ba2; color:white; border:none; width:auto; padding: 15px 30px;">إعادة الاختبار</button>
+            `;
+
+            // زر عرض الأخطاء إذا وجدت
+            if (wrongAnswers.length > 0) {
+                resultHTML += `
+                    <br>
+                    <button class="tf-btn" onclick="showMistakes()" style="background:#e74c3c; color:white; border:none; width:auto; padding: 15px 30px; margin-top: 10px;">عرض الإجابات الخاطئة</button>
+                `;
+            }
+
+            document.getElementById('quiz-container').innerHTML = resultHTML;
+        }
+
+        function showMistakes() {
+            let mistakesHTML = `<h3>ملخص الأخطاء</h3><div class="mistakes-container">`;
+            
+            wrongAnswers.forEach(item => {
+                mistakesHTML += `
+                    <div class="mistake-item">
+                        <div class="mistake-q">س${item.qNum}: ${item.q}</div>
+                        <div class="mistake-wrong">❌ إجابتك: ${item.selected}</div>
+                        <div class="mistake-correct">✅ الصح: ${item.correct}</div>
+                    </div>
+                `;
+            });
+
+            mistakesHTML += `</div><button class="tf-btn" onclick="restartQuiz()" style="background:#764ba2; color:white; border:none; width:auto; padding: 15px 30px; margin-top: 15px;">إعادة الاختبار</button>`;
+            
+            document.getElementById('quiz-container').innerHTML = mistakesHTML;
         }
 
         loadQuestion();
