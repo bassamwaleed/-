@@ -116,22 +116,16 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        .btn-true {
-            color: #155724;
-        }
-        
         .btn-true:hover:not(:disabled) {
             background-color: #d4edda;
             border-color: #28a745;
-        }
-
-        .btn-false {
-            color: #721c24;
+            color: #155724;
         }
 
         .btn-false:hover:not(:disabled) {
             background-color: #f8d7da;
             border-color: #dc3545;
+            color: #721c24;
         }
 
         .tf-btn.correct-answer {
@@ -295,11 +289,11 @@
             <div class="question" id="question-text">جاري تحميل الأسئلة...</div>
             
             <div class="tf-buttons">
-                <!-- 0 تعني صواب حسب الكود -->
+                <!-- 0 تعني صواب -->
                 <button class="tf-btn btn-true" id="btn-0" onclick="checkAnswer(0)">
                     ✅ صواب
                 </button>
-                <!-- 1 تعني خطأ حسب الكود -->
+                <!-- 1 تعني خطأ -->
                 <button class="tf-btn btn-false" id="btn-1" onclick="checkAnswer(1)">
                     ❌ خطأ
                 </button>
@@ -376,14 +370,19 @@
             { "t": "من التقسيمات السياسية للنفقات العامة النفقات المحايدة والنفقات التدخلية", "a": 0 }
         ];
 
-        // مصفوفة الأسئلة الحالية
+        // تعيين الأرقام التعريفية للأسئلة
+        originalQuestions.forEach((q, index) => {
+            q.id = index + 1;
+        });
+
+        // مصفوفة الأسئلة الحالية (قابلة للتغيير)
         let questions = [...originalQuestions];
         let currentQuestion = 0;
         let score = 0;
         let isRandom = false; // حالة الترتيب
         let wrongAnswers = []; // لتخزين الإجابات الخاطئة
 
-        // تحديث العدد الكلي
+        // تحديث العدد الكلي للأسئلة
         document.getElementById('total-q').innerText = questions.length;
 
         // دالة تبديل الترتيب
@@ -437,13 +436,14 @@
 
         function loadQuestion() {
             const q = questions[currentQuestion];
-            // إضافة الترقيم للسؤال
-            document.getElementById('question-text').innerText = (currentQuestion + 1) + ". " + q.t;
+            // عرض رقم السؤال المرتبط بالسؤال (q.id)
+            document.getElementById('question-text').innerText = q.id + ". " + q.t;
             document.getElementById('q-curr').innerText = currentQuestion + 1;
             
             const progress = ((currentQuestion) / questions.length) * 100;
             document.getElementById('progress-fill').style.width = `${progress}%`;
 
+            // إعادة تفعيل الأزرار
             const btns = document.querySelectorAll('.tf-btn');
             btns.forEach(btn => {
                 btn.disabled = false;
@@ -452,11 +452,10 @@
         }
 
         function checkAnswer(userChoice) {
-            // تعطيل الأزرار
             const btns = document.querySelectorAll('.tf-btn');
             btns.forEach(btn => btn.disabled = true);
 
-            const correctChoice = questions[currentQuestion].a; // 0 أو 1
+            const correctChoice = questions[currentQuestion].a; // 0 أو 1 (0=صواب, 1=خطأ)
             const selectedBtn = document.getElementById('btn-' + userChoice);
             const correctBtn = document.getElementById('btn-' + correctChoice);
 
@@ -467,12 +466,12 @@
                 selectedBtn.classList.add('wrong-answer');
                 correctBtn.classList.add('show-correct');
                 
-                // تسجيل الإجابة الخاطئة (0=صواب, 1=خطأ)
+                // تسجيل الإجابة الخاطئة
                 wrongAnswers.push({
                     q: questions[currentQuestion].t,
                     selected: userChoice === 0 ? "صواب" : "خطأ",
                     correct: correctChoice === 0 ? "صواب" : "خطأ",
-                    qNum: currentQuestion + 1
+                    qNum: questions[currentQuestion].id // استخدام الرقم الأصلي
                 });
             }
 
