@@ -59,14 +59,14 @@
         .control-label {
             font-weight: bold;
             color: #555;
-            font-size: 0.95em;
+            font-size: 0.9em;
         }
 
         .num-input {
             padding: 8px;
             border-radius: 10px;
             border: 1px solid #ddd;
-            width: 60px;
+            width: 50px;
             text-align: center;
             font-family: 'Tajawal', sans-serif;
             font-size: 1em;
@@ -310,10 +310,12 @@
                 </button>
             </div>
             <div class="control-row">
-                <span class="control-label">حدد عدد الأسئلة:</span>
-                <input type="number" id="q-limit" class="num-input" min="1" value="10">
-                <span style="font-size: 0.8em; color: #777;">(الكل: <span id="total-available">0</span>)</span>
-                <button onclick="applySettings()" class="top-btn start-btn">بدء الاختبار</button>
+                <span class="control-label">من:</span>
+                <input type="number" id="q-start" class="num-input" min="1" value="1">
+                <span class="control-label">إلى:</span>
+                <input type="number" id="q-end" class="num-input" min="1" value="10">
+                <span style="font-size: 0.8em; color: #777;">(المجموع: <span id="total-available">0</span>)</span>
+                <button onclick="applySettings()" class="top-btn start-btn">بدء</button>
             </div>
         </div>
 
@@ -321,7 +323,7 @@
             <div class="progress-fill" id="progress-fill"></div>
         </div>
         
-        <div class="question-number">السؤال <span id="q-curr">1</span> من <span id="q-total">0</span></div>
+        <div class="question-number">السؤال <span id="q-curr">1</span>حدد عدد الاسئله: من <span id="q-total">0</span></div>
         
         <div id="quiz-container">
             <div class="question" id="question-text">جاري تحميل الأسئلة...</div>
@@ -469,7 +471,7 @@
             {
                 "t": "يقصد بها الأموال التي ترد إلى الحكومات والأنظمة الإدارية والخزائن بصورة عامة",
                 "o": ["الايرادات العامة", "الضرائب", "المالية العامة", "الخزانة العامة"],
-                "a": 0
+                "a": 3
             },
             {
                 "t": "هي ضريبة تفرض على السلع والخدمات وعلى الامتيازات الخاصة (السؤال 26)",
@@ -654,8 +656,9 @@
         });
 
         // تحديث الحد الأقصى للإدخال
-        document.getElementById('q-limit').max = originalQuestions.length;
-        document.getElementById('q-limit').value = originalQuestions.length;
+        document.getElementById('q-start').max = originalQuestions.length;
+        document.getElementById('q-end').max = originalQuestions.length;
+        document.getElementById('q-end').value = originalQuestions.length;
         document.getElementById('total-available').innerText = originalQuestions.length;
 
         // مصفوفة الأسئلة الحالية (قابلة للتغيير)
@@ -682,29 +685,34 @@
             applySettings();
         }
 
-        // دالة تطبيق الإعدادات (العدد + الترتيب)
+        // دالة تطبيق الإعدادات (النطاق + الترتيب)
         function applySettings() {
-            const limitInput = document.getElementById('q-limit');
-            let limit = parseInt(limitInput.value);
+            const startInput = document.getElementById('q-start');
+            const endInput = document.getElementById('q-end');
             
-            // التحقق من صحة الرقم
-            if (isNaN(limit) || limit < 1) limit = 1;
-            if (limit > originalQuestions.length) limit = originalQuestions.length;
-            limitInput.value = limit;
+            let start = parseInt(startInput.value);
+            let end = parseInt(endInput.value);
+            
+            // التحقق من صحة الأرقام
+            if (isNaN(start) || start < 1) start = 1;
+            if (isNaN(end) || end > originalQuestions.length) end = originalQuestions.length;
+            if (start > end) start = end;
 
-            // إنشاء نسخة من الأسئلة
-            let tempQuestions = [...originalQuestions];
+            startInput.value = start;
+            endInput.value = end;
 
+            // تحديد الأسئلة بناءً على النطاق المختار (index يبدأ من 0)
+            let selectedQuestions = originalQuestions.slice(start - 1, end);
+
+            // تطبيق العشوائية إذا كانت مفعلة
             if (isRandom) {
-                // خلط الأسئلة
-                for (let i = tempQuestions.length - 1; i > 0; i--) {
+                for (let i = selectedQuestions.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
-                    [tempQuestions[i], tempQuestions[j]] = [tempQuestions[j], tempQuestions[i]];
+                    [selectedQuestions[i], selectedQuestions[j]] = [selectedQuestions[j], selectedQuestions[i]];
                 }
             }
 
-            // أخذ العدد المطلوب فقط
-            questions = tempQuestions.slice(0, limit);
+            questions = selectedQuestions;
             
             // تحديث العدد الكلي في الواجهة
             document.getElementById('q-total').innerText = questions.length;
@@ -719,6 +727,8 @@
             score = 0;
             wrongAnswers = []; // تصفير الأخطاء
             
+            if (questions.length === 0) return;
+
             document.getElementById('quiz-container').innerHTML = `
                 <div class="question" id="question-text">جاري تحميل الأسئلة...</div>
                 <div class="options" id="options-container"></div>
@@ -771,7 +781,7 @@
                     q: questions[currentQuestion].t,
                     selected: questions[currentQuestion].o[selectedIndex],
                     correct: questions[currentQuestion].o[correctIndex],
-                    qNum: questions[currentQuestion].id // استخدام الرقم الأصلي
+                    qNum: questions[currentQuestion].id 
                 });
             }
 
@@ -831,6 +841,4 @@
     </script>
 
 </body>
-
-
-
+</html>
