@@ -106,8 +106,8 @@
             color: white;
         }
 
-        /* زر الترتيب النشط */
-        .shuffle-btn.active {
+        /* الأزرار النشطة (سواء للترتيب أو إظهار الرقم) */
+        .top-btn.active {
             background-color: #764ba2;
             color: white;
             border-color: #764ba2;
@@ -334,8 +334,11 @@
         <!-- لوحة التحكم في الأسئلة -->
         <div class="controls-container">
             <div class="control-row">
-                <button id="shuffle-btn" class="top-btn shuffle-btn" onclick="toggleShuffle()">
+                <button id="shuffle-btn" class="top-btn" onclick="toggleShuffle()">
                     <span>🔢</span> الترتيب: عادي
+                </button>
+                <button id="toggle-id-btn" class="top-btn active" onclick="toggleQuestionId()">
+                    <span>🆔</span> الرقم السؤال: ظاهر
                 </button>
             </div>
             <div class="control-row">
@@ -454,6 +457,7 @@
         let currentQuestion = 0;
         let score = 0;
         let isRandom = false; // حالة الترتيب
+        let showQuestionId = true; // حالة إظهار رقم السؤال
         let wrongAnswers = []; // لتخزين الإجابات الخاطئة
 
         // دالة تبديل الترتيب
@@ -468,9 +472,28 @@
                 btn.innerHTML = "<span>🔢</span> الترتيب: عادي";
                 btn.classList.remove('active');
             }
-            
-            // عند تغيير الترتيب، نعيد تطبيق الإعدادات
             applySettings();
+        }
+
+        // دالة تبديل إظهار رقم السؤال
+        function toggleQuestionId() {
+            showQuestionId = !showQuestionId;
+            const btn = document.getElementById('toggle-id-btn');
+            
+            if (showQuestionId) {
+                btn.innerHTML = "<span>🆔</span> الرقم: ظاهر";
+                btn.classList.add('active');
+            } else {
+                btn.innerHTML = "<span>🚫</span> الرقم: مخفي";
+                btn.classList.remove('active');
+            }
+            
+            // تحديث نص السؤال الحالي إذا كان الاختبار جارياً
+            const questionTextElement = document.getElementById('question-text');
+            if (questionTextElement && questions.length > 0 && currentQuestion < questions.length) {
+                 const q = questions[currentQuestion];
+                 questionTextElement.innerText = (showQuestionId ? (q.id + ". ") : "") + q.t;
+            }
         }
 
         // دالة تطبيق الإعدادات (النطاق + الترتيب)
@@ -537,8 +560,8 @@
 
         function loadQuestion() {
             const q = questions[currentQuestion];
-            // عرض رقم السؤال المرتبط بالسؤال (q.id)
-            document.getElementById('question-text').innerText = q.id + ". " + q.t;
+            // عرض رقم السؤال المرتبط بالسؤال (q.id) بناءً على حالة showQuestionId
+            document.getElementById('question-text').innerText = (showQuestionId ? (q.id + ". ") : "") + q.t;
             document.getElementById('q-curr').innerText = currentQuestion + 1;
             
             const progress = ((currentQuestion) / questions.length) * 100;
@@ -634,6 +657,3 @@
 
 </body>
 </html>
-
-
-
