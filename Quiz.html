@@ -22,31 +22,31 @@
             background: rgba(255, 255, 255, 0.95);
             width: 90%;
             max-width: 600px;
-            border-radius: 25px;
+            border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             text-align: center;
             position: relative;
             margin-top: 50px;
         }
 
         h2 {
-            color: #2d3748;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #edf2f7;
+            color: #4a4a4a;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #eee;
             padding-bottom: 15px;
-            font-weight: 800;
         }
 
         /* حاوية أدوات التحكم */
         .controls-container {
-            background: #edf2f7;
+            background: #f8f9fa;
             padding: 15px;
             border-radius: 15px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
+            border: 1px solid #e9ecef;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .control-row {
@@ -59,73 +59,60 @@
 
         .control-label {
             font-weight: bold;
-            color: #4a5568;
+            color: #555;
             font-size: 0.9em;
         }
 
         .num-input {
-            padding: 8px 12px;
-            border-radius: 20px;
-            border: 2px solid #cbd5e0;
-            width: 60px;
+            padding: 8px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            width: 50px;
             text-align: center;
             font-family: 'Tajawal', sans-serif;
             font-size: 1em;
             background: #fff;
-            color: #2d3748;
-            font-weight: bold;
-        }
-        
-        .num-input:focus {
-            outline: none;
-            border-color: #667eea;
         }
 
         /* تنسيق الأزرار العلوية */
         .top-btn {
-            background-color: #fff;
-            color: #4a5568;
-            border: 2px solid #cbd5e0;
-            padding: 8px 20px;
+            background-color: #f0f2f5;
+            color: #555;
+            border: 1px solid #ddd;
+            padding: 8px 15px;
             border-radius: 20px;
             cursor: pointer;
             font-family: 'Tajawal', sans-serif;
             font-size: 0.9em;
-            font-weight: bold;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            gap: 5px;
         }
 
         .top-btn:hover {
-            background-color: #f7fafc;
-            border-color: #a0aec0;
-            transform: translateY(-1px);
+            background-color: #e2e6ea;
+            transform: translateY(-2px);
         }
 
-        /* الأزرار النشطة */
         .toggle-btn.active {
             background-color: #667eea;
             color: white;
             border-color: #667eea;
-            box-shadow: 0 4px 6px rgba(102, 126, 234, 0.3);
         }
 
         /* زر البدء */
         .start-btn {
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background-color: #764ba2;
             color: white;
             border: none;
-            box-shadow: 0 4px 10px rgba(118, 75, 162, 0.3);
+            font-weight: bold;
         }
 
         .start-btn:hover {
-            opacity: 0.9;
+            background-color: #5a6fd6;
+            color: white;
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(118, 75, 162, 0.4);
-            border: none;
         }
 
         /* زر الجروب */
@@ -140,117 +127,105 @@
             color: white;
             border: none;
             padding: 12px;
-            border-radius: 15px;
+            border-radius: 12px;
             font-family: 'Tajawal', sans-serif;
             font-size: 1em;
             font-weight: bold;
             cursor: pointer;
             text-decoration: none;
-            transition: all 0.3s;
-            box-shadow: 0 4px 6px rgba(37, 211, 102, 0.2);
+            transition: background 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .group-btn:hover {
             background: #128c7e;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(37, 211, 102, 0.3);
         }
 
         .question-number {
             background: #764ba2;
             color: white;
-            padding: 5px 20px;
+            padding: 5px 15px;
             border-radius: 50px;
-            font-size: 0.95em;
-            margin-bottom: 20px;
+            font-size: 0.9em;
+            margin-bottom: 15px;
             display: inline-block;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
         }
 
         .question {
-            font-size: 1.5em;
-            margin-bottom: 35px;
-            color: #2d3748;
-            font-weight: 800;
-            line-height: 1.6;
+            font-size: 1.4em;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            font-weight: bold;
+            line-height: 1.5;
             text-align: center;
         }
 
         .tf-buttons {
             display: flex;
-            gap: 25px;
+            gap: 20px;
             justify-content: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
-        /* === تحسين تصميم أزرار الإجابة (صح/خطأ) === */
         .tf-btn {
             flex: 1;
-            padding: 25px 20px;
-            border: none;
-            border-radius: 20px;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
             cursor: pointer;
-            font-size: 1.6em;
+            font-size: 1.5em;
             font-family: 'Tajawal', sans-serif;
             font-weight: bold;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: #ffffff;
-            color: #4a5568;
+            transition: all 0.2s ease;
+            background: white;
+            color: #555;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 15px rgba(0,0,0,0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-true {
-            border-bottom: 5px solid #48bb78;
-        }
-        
-        .btn-false {
-            border-bottom: 5px solid #f56565;
         }
 
         .tf-btn:hover:not(:disabled) {
-            transform: translateY(-7px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
+        .btn-true {
+            color: #155724;
+        }
+        
         .btn-true:hover:not(:disabled) {
-            background-color: #48bb78;
-            color: white;
-            border-bottom-color: #2f855a;
+            background-color: #d4edda;
+            border-color: #28a745;
+        }
+
+        .btn-false {
+            color: #721c24;
         }
 
         .btn-false:hover:not(:disabled) {
-            background-color: #f56565;
-            color: white;
-            border-bottom-color: #c53030;
+            background-color: #f8d7da;
+            border-color: #dc3545;
         }
 
         .tf-btn.correct-answer {
-            background-color: #48bb78 !important;
+            background-color: #28a745 !important;
+            border-color: #28a745 !important;
             color: white !important;
-            border-bottom-color: #2f855a !important;
-            box-shadow: inset 0 3px 5px rgba(0,0,0,0.2);
-            transform: scale(0.98);
         }
 
         .tf-btn.wrong-answer {
-            background-color: #f56565 !important;
+            background-color: #dc3545 !important;
+            border-color: #dc3545 !important;
             color: white !important;
-            border-bottom-color: #c53030 !important;
-            opacity: 0.8;
+            opacity: 0.7;
         }
         
         .tf-btn.show-correct {
-            background-color: #48bb78 !important;
+            background-color: #28a745 !important;
+            border-color: #28a745 !important;
             color: white !important;
-            border-bottom-color: #2f855a !important;
-            opacity: 0.9;
-            box-shadow: 0 0 15px rgba(72, 187, 120, 0.6);
+            opacity: 0.8;
         }
 
         .tf-btn:disabled {
@@ -259,22 +234,18 @@
         }
 
         .score-area {
-            margin-top: 30px;
+            margin-top: 25px;
             font-weight: bold;
             color: #764ba2;
-            font-size: 1.2em;
-            background: #f7fafc;
-            padding: 10px;
-            border-radius: 10px;
-            display: inline-block;
+            font-size: 1.1em;
         }
 
         .back-btn {
             display: inline-block;
             margin-top: 25px;
-            color: #a0aec0;
+            color: #888;
             text-decoration: none;
-            font-size: 0.95em;
+            font-size: 0.9em;
             transition: color 0.3s;
         }
 
@@ -287,52 +258,51 @@
             text-align: right;
             max-height: 300px;
             overflow-y: auto;
-            margin-top: 20px;
-            padding: 15px;
-            background: #fff;
-            border-radius: 15px;
-            border: 2px solid #e2e8f0;
+            margin-top: 15px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            border: 1px solid #eee;
         }
 
         .mistake-item {
-            background: #fff5f5;
+            background: white;
             padding: 15px;
-            margin-bottom: 12px;
-            border-radius: 10px;
-            border-right: 5px solid #f56565;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-right: 4px solid #dc3545;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         .mistake-q {
             font-weight: bold;
             margin-bottom: 8px;
-            color: #2d3748;
-            font-size: 1.1em;
+            color: #333;
         }
 
         .mistake-wrong {
-            color: #e53e3e;
-            font-weight: bold;
+            color: #dc3545;
+            font-size: 0.95em;
         }
 
         .mistake-correct {
-            color: #38a169;
+            color: #28a745;
+            font-size: 0.95em;
             font-weight: bold;
-            margin-top: 4px;
         }
 
         .progress-bar {
-            height: 8px;
-            background: #edf2f7;
-            border-radius: 4px;
-            margin-bottom: 30px;
+            height: 6px;
+            background: #eee;
+            border-radius: 3px;
+            margin-bottom: 25px;
             overflow: hidden;
         }
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #667eea, #764ba2);
             width: 0%;
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: width 0.3s ease;
         }
 
         /* واتساب */
@@ -355,7 +325,7 @@
             border-radius: 50%;
             text-align: center;
             font-size: 30px;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -365,20 +335,19 @@
 
         .whatsapp-float:hover {
             background-color: #128c7e;
-            transform: scale(1.1) rotate(10deg);
+            transform: scale(1.1);
         }
 
         .whatsapp-text {
-            font-size: 12px;
+            font-size: 11px;
             color: #fff;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 6px 10px;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 5px 8px;
             border-radius: 8px;
             text-align: center;
-            max-width: 140px;
+            max-width: 120px;
             line-height: 1.4;
             backdrop-filter: blur(4px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
     </style>
 </head>
@@ -712,37 +681,33 @@
             document.getElementById('progress-fill').style.width = `${progress}%`;
 
             const container = document.getElementById('options-container');
-            container.innerHTML = '';
+            if (container) container.innerHTML = ''; // This check is just for safety, though not needed for T/F
 
-            // الحروف العربية للاختيارات
-            const letters = ['أ', 'ب', 'ج', 'د'];
-
-            q.o.forEach((opt, index) => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                // إضافة الحرف (أ، ب، ج، د) قبل نص الاختيار
-                btn.innerText = `${letters[index]} - ${opt}`;
-                btn.onclick = () => checkAnswer(index, btn);
-                container.appendChild(btn);
+            // إعادة تفعيل الأزرار
+            const btns = document.querySelectorAll('.tf-btn');
+            btns.forEach(btn => {
+                btn.disabled = false;
+                btn.classList.remove('correct-answer', 'wrong-answer', 'show-correct');
             });
         }
 
-        function checkAnswer(selectedIndex, btnElement) {
-            const allBtns = document.querySelectorAll('.option-btn');
-            allBtns.forEach(b => b.disabled = true);
+        function checkAnswer(userChoice) {
+            // تعطيل الأزرار
+            const btns = document.querySelectorAll('.tf-btn');
+            btns.forEach(btn => btn.disabled = true);
 
             const correctChoice = questions[currentQuestion].a; // 0 أو 1
 
-            if (selectedIndex === correctIndex) {
+            if (userChoice === correctChoice) {
                 // ... (المنطق كما هو)
                 const selectedBtn = document.getElementById('btn-' + userChoice);
-                if(selectedBtn) selectedBtn.classList.add('correct-answer');
+                selectedBtn.classList.add('correct-answer');
                 score++;
             } else {
                 const selectedBtn = document.getElementById('btn-' + userChoice);
                 const correctBtn = document.getElementById('btn-' + correctChoice);
-                if(selectedBtn) selectedBtn.classList.add('wrong-answer');
-                if(correctBtn) correctBtn.classList.add('show-correct');
+                selectedBtn.classList.add('wrong-answer');
+                correctBtn.classList.add('show-correct');
                 
                 // تسجيل الإجابة الخاطئة
                 wrongAnswers.push({
